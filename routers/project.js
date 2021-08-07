@@ -4,11 +4,11 @@ const Task = require("../models/task.model");
 var express = require("express");
 var router = express.Router();
 
-const createProject = (res, title, description) => {
+const createProject = (res, title, description, userId) => {
   Project.create({
     title,
     description,
-    userId: user._id,
+    userId,
   })
     .then((project) => {
       res.status(200).send({
@@ -40,10 +40,11 @@ const editProject = (res, userId, title, description, id) => {
           });
         })
         .catch((err) => {
-          res.status(500).send("Project could not be saved");
+          return res.status(500).send("Project could not be saved");
         });
+    } else {
+      return res.status(500).send();
     }
-    return res.status(500).send();
   });
 };
 
@@ -69,12 +70,12 @@ const deleteProject = (res, userId, id) => {
 
 //Create a project from logged user
 router.post("/create", (req, res, next) => {
-  const username = req.userId;
+  const { username } = req.user;
   const { title, description } = req.body;
   if (title && description) {
     User.findOne({ username }, (err, user) => {
       if (user) {
-        createProject(res, title, description);
+        createProject(res, title, description, user._id);
       } else {
         res.status(404).send("User not found");
       }
@@ -86,7 +87,7 @@ router.post("/create", (req, res, next) => {
 
 //Edit a selected project from logged user
 router.post("/edit", (req, res, next) => {
-  const username = req.userId;
+  const { username } = req.user;
   const { title, description, id } = req.body;
   if (title && description && id) {
     User.findOne({ username }, (err, user) => {
@@ -103,12 +104,12 @@ router.post("/edit", (req, res, next) => {
 
 //DELETE: it will delete the project and all the tasks linked to that project
 router.post("/delete", (req, res, next) => {
-  const username = req.userId;
-  const { title, description, id } = req.body;
-  if (title && description && id) {
+  const { username } = req.user;
+  const { projectId } = req.body;
+  if (projectId) {
     User.findOne({ username }, (err, user) => {
       if (user) {
-        deleteProject(res, user._id, id);
+        deleteProject(res, user._id, projectId);
       } else {
         res.status(404).send("User not found");
       }
@@ -120,10 +121,11 @@ router.post("/delete", (req, res, next) => {
 
 //Get all projects from logged user
 router.get("/", (req, res) => {
-  const username = req.userId;
+  console.log(req.user);
+  const { username, userId } = req.user;
   User.findOne({ username }, (err, user) => {
     if (user) {
-      Project.find({ userId: username }, (err, projects) => {
+      Project.find({ userId }, (err, projects) => {
         if (err) {
           return res
             .status(404)
@@ -142,3 +144,5 @@ router.get("/", (req, res) => {
     }
   });
 });
+
+module.exports = router;

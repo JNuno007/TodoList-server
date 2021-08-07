@@ -42,7 +42,7 @@ router.get("/signin", (req, res, next) => {
         bcrypt.compare(password, user.password).then((result) => {
           if (result) {
             const token = jwt.sign(
-              { id: user.username, timestamp: Date.now() },
+              { id: user._id, username: user.username, timestamp: Date.now() },
               process.env.JWT_SECRET,
               { expiresIn: "6h" },
             );

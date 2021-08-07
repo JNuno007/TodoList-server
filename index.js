@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const http = require("http");
+const isValidToken = require("./middleware/isAuth");
 
 require("dotenv").config();
 
@@ -31,9 +32,11 @@ mongoose
 
 const loginRouter = require("./routers/login");
 const projectRouter = require("./routers/project");
+const taskRouter = require("./routers/task");
 
 app.use("/login", loginRouter);
-app.use("/project", projectRouter);
+app.use("/project", isValidToken, projectRouter);
+app.use("/task", isValidToken, taskRouter);
 
 let server = http.createServer(app);
 

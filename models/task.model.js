@@ -16,6 +16,10 @@ const taskSchema = new Schema(
       type: String,
       required: true,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
     createdDate: {
       type: Date,
       required: true,
