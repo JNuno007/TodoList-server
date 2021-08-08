@@ -65,7 +65,7 @@ router.post("/edit", (req, res, next) => {
       { new: true },
       (err, task) => {
         if (err) {
-          return res.status(404).send("Could not find task.");
+          return res.status(404).send({ message: "Could not find task." });
         }
         if (task) {
           return res.status(200).send({
@@ -78,7 +78,7 @@ router.post("/edit", (req, res, next) => {
       },
     );
   } else {
-    return res.status(404).send("Missing task data");
+    return res.status(404).send({ message: "Missing task data" });
   }
 });
 
