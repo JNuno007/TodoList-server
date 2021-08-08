@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 var express = require("express");
 var router = express.Router();
 
-router.get("/", (req, res, next) => {
+router.get("/", (req, res, _next) => {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) {
     return res.status(401).send({message: "No token provided"});

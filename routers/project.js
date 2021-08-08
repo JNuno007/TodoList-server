@@ -12,7 +12,6 @@ const createProject = (res, title, description, userId) => {
   })
     .then((project) => {
       res.status(200).send({
-        success: true,
         project,
         message: "Project created!",
       });
@@ -34,7 +33,6 @@ const editProject = (res, userId, title, description, id) => {
         .save()
         .then((prj) => {
           return res.status(200).send({
-            success: true,
             prj,
             message: "Project was updated!",
           });
@@ -57,7 +55,6 @@ const deleteProject = (res, userId, id) => {
         if (err) return res.status(404).send("Could not delete all the tasks");
         if (tasks) {
           return res.status(200).send({
-            success: true,
             projectId: id,
             tasks,
             message: "The project and respective tasks were deleted",
@@ -69,7 +66,7 @@ const deleteProject = (res, userId, id) => {
 };
 
 //Create a project from logged user
-router.post("/create", (req, res, next) => {
+router.post("/create", (req, res, _next) => {
   const { username } = req.user;
   const { title, description } = req.body;
   if (title && description) {
@@ -86,7 +83,7 @@ router.post("/create", (req, res, next) => {
 });
 
 //Edit a selected project from logged user
-router.post("/edit", (req, res, next) => {
+router.post("/edit", (req, res, _next) => {
   const { username } = req.user;
   const { title, description, id } = req.body;
   if (title && description && id) {
@@ -94,16 +91,16 @@ router.post("/edit", (req, res, next) => {
       if (user) {
         editProject(res, user._id, title, description, id);
       } else {
-        res.status(404).send("User not found");
+        res.status(404).send({message: "User not found"});
       }
     });
   } else {
-    res.status(404).send("Missing project data");
+    res.status(404).send({message: "Missing project data"});
   }
 });
 
 //DELETE: it will delete the project and all the tasks linked to that project
-router.post("/delete", (req, res, next) => {
+router.post("/delete", (req, res, _next) => {
   const { username } = req.user;
   const { projectId } = req.body;
   if (projectId) {
@@ -111,11 +108,11 @@ router.post("/delete", (req, res, next) => {
       if (user) {
         deleteProject(res, user._id, projectId);
       } else {
-        res.status(404).send("User not found");
+        res.status(404).send({message: "User not found"});
       }
     });
   } else {
-    res.status(404).send("Missing project data");
+    res.status(404).send({message: "Missing project data"});
   }
 });
 
@@ -132,7 +129,6 @@ router.get("/", (req, res) => {
         }
         if (projects) {
           return res.status(200).send({
-            success: true,
             projects,
           });
         }

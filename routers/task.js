@@ -14,11 +14,10 @@ const createTask = (res, project, title, description, userId) => {
     },
     (err, task) => {
       if (err) {
-        return res.status(404).send("Could not create task");
+        return res.status(404).send({ message: "Could not create task" });
       }
       if (task) {
         return res.status(200).send({
-          success: true,
           message: "Task created!",
           task,
         });
@@ -30,27 +29,27 @@ const createTask = (res, project, title, description, userId) => {
 };
 
 //CREATE
-router.post("/create", (req, res, next) => {
+router.post("/create", (req, res, _next) => {
   const { userId } = req.user;
   const { projectId, title, description } = req.body;
 
   if (projectId && title && description) {
     Project.findOne({ _id: projectId, userId }, (err, project) => {
       if (err) {
-        return res.status(404).send("Project not found");
+        return res.status(404).send({ message: "Project not found" });
       }
       if (project) {
         createTask(res, project, title, description, userId);
       }
     });
   } else {
-    return res.status(404).send("Missing task data");
+    return res.status(404).send({ message: "Missing task data" });
   }
 });
 
 //EDIT
 
-router.post("/edit", (req, res, next) => {
+router.post("/edit", (req, res, _next) => {
   const { userId } = req.user;
   const { taskId, title, description, finished } = req.body;
 
@@ -83,43 +82,43 @@ router.post("/edit", (req, res, next) => {
 });
 
 //REMOVE
-router.post("/remove", (req, res, next) => {
+router.post("/remove", (req, res, _next) => {
   const { userId } = req.user;
   const { taskId } = req.body;
 
   if (taskId) {
     Task.findOneAndDelete({ _id: taskId, userId }, (err, task) => {
       if (err) {
-        return res.status(404).send("Could not remove task.");
+        return res.status(404).send({ message: "Could not remove task." });
       }
       if (task) {
         return res.status(200).send({
           message: "Task removed!",
-          success: true,
           task,
         });
       }
       return res.status(500).send();
     });
   } else {
-    return res.status(404).send("Missing task data");
+    return res.status(404).send({ message: "Missing task data" });
   }
 });
 
 //GET TASKS FROM Project
-router.get("/tasks", (req, res, next) => {
+router.get("/tasks", (req, res, _next) => {
   const { userId } = req.user;
   const { projectId } = req.query;
 
   Task.find({ projectId, userId }, (err, tasks) => {
     if (err) {
-      return res.status(404).send("Could not get any task from project.");
+      return res
+        .status(404)
+        .send({ message: "Could not get any task from project." });
     }
     if (tasks) {
       return res.status(200).send({
         tasks,
         message: "Tasks from project",
-        success: true,
       });
     } else {
       return res.status(500).send();

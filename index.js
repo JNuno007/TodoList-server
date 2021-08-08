@@ -45,3 +45,5 @@ let server = http.createServer(app);
 server.listen(port, () => {
   console.log("server running at " + port);
 });
+
+module.exports = app;

@@ -4,7 +4,7 @@ const User = require("../models/user.model");
 var express = require("express");
 var router = express.Router();
 
-router.post("/register", (req, res, next) => {
+router.post("/register", (req, res, _next) => {
   const { username, password } = req.body;
   if (username && password) {
     User.findOne({ username }, (err, user) => {
@@ -24,17 +24,17 @@ router.post("/register", (req, res, next) => {
                 res.status(200).send("User created");
               })
               .catch((error) => {
-                res.status(500).send("An internal error has ocurred");
+                res.status(500).send({message: "An internal error has ocurred"});
               });
           });
       }
     });
   } else {
-    res.status(404).send("Missing fields");
+    res.status(404).send({message: "Missing fields"});
   }
 });
 
-router.get("/signin", (req, res, next) => {
+router.get("/signin", (req, res, _next) => {
   const { username, password } = req.query;
   if (username && password) {
     User.findOne({ username }, (err, user) => {
