@@ -65,7 +65,7 @@ npm install
 ```
 
 - Create your `.env` file with your credentials and secrets
-- Run the server at port 5000 and Nodemon
+- Run the server at port 5000 with Nodemon
 
 ```
 npm start
