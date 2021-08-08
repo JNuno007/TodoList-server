@@ -14,7 +14,6 @@ const createTask = (res, project, title, description, userId) => {
     },
     (err, task) => {
       if (err) {
-        console.log(err);
         return res.status(404).send("Could not create task");
       }
       if (task) {

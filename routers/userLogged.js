@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
+var express = require("express");
+var router = express.Router();
 
-isValidToken = (req, res, next) => {
+router.get("/", (req, res, next) => {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) {
     return res.status(401).send({message: "No token provided"});
@@ -9,9 +11,9 @@ isValidToken = (req, res, next) => {
     if (err) {
       res.status(401).send();
     } else {
-      req.user = { userId: decoded.id, username: decoded.username };
-      next();
+      res.status(200).send();
     }
   });
-};
-module.exports = isValidToken;
+});
+
+module.exports = router;

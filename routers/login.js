@@ -52,15 +52,15 @@ router.get("/signin", (req, res, next) => {
               message: "user found & logged in",
             });
           } else {
-            res.status(404).send("Username and/or password are incorrect");
+            res.status(404).send({message: "Username and/or password are incorrect"});
           }
         });
       } else {
-        res.status(404).send("Username and/or password are incorrect");
+        res.status(404).send({message: "Username and/or password are incorrect"});
       }
     });
   } else {
-    res.status(404).send("Missing credentials");
+    res.status(404).send({message: "Missing credentials"});
   }
 });
 

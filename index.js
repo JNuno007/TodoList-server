@@ -33,10 +33,12 @@ mongoose
 const loginRouter = require("./routers/login");
 const projectRouter = require("./routers/project");
 const taskRouter = require("./routers/task");
+const userLoggedRouter = require("./routers/userLogged");
 
 app.use("/login", loginRouter);
 app.use("/project", isValidToken, projectRouter);
 app.use("/task", isValidToken, taskRouter);
+app.use("/isUserLogged", userLoggedRouter);
 
 let server = http.createServer(app);
 

@@ -77,11 +77,11 @@ router.post("/create", (req, res, next) => {
       if (user) {
         createProject(res, title, description, user._id);
       } else {
-        res.status(404).send("User not found");
+        res.status(404).send({ message: "User not found" });
       }
     });
   } else {
-    res.status(404).send("Missing project data");
+    res.status(404).send({ message: "Missing project data" });
   }
 });
 
@@ -121,7 +121,6 @@ router.post("/delete", (req, res, next) => {
 
 //Get all projects from logged user
 router.get("/", (req, res) => {
-  console.log(req.user);
   const { username, userId } = req.user;
   User.findOne({ username }, (err, user) => {
     if (user) {
@@ -129,7 +128,7 @@ router.get("/", (req, res) => {
         if (err) {
           return res
             .status(404)
-            .send("Could not get any projects from the user");
+            .send({ message: "Could not get any projects from the user" });
         }
         if (projects) {
           return res.status(200).send({
@@ -140,7 +139,7 @@ router.get("/", (req, res) => {
         return res.status(500).send();
       });
     } else {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ message: "User not found" });
     }
   });
 });
